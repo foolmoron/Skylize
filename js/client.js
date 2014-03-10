@@ -3,6 +3,8 @@ var Client, SL, _ref;
 
 SL = window.SL = (_ref = window.SL) != null ? _ref : {};
 
+SL.GOOGLE_API_KEY = "AIzaSyClmp-OcgOFVF9fPybWuFAutXOlYr7PAl8";
+
 SL.SPRITE_DIRECTORY = "./sprites/";
 
 SL.FONTSHEET_DIRECTORY = "./font/";
@@ -16,9 +18,11 @@ SL.font = {};
 Client = IgeClass.extend({
   classId: 'Client',
   init: function() {
-    var self;
     ige.globalSmoothing(true);
-    self = this;
+    $.ajaxSetup({
+      async: false,
+      contentType: 'application/json'
+    });
     ige.on('texturesLoaded', (function(_this) {
       return function() {
         ige.createFrontBuffer(true);
@@ -51,6 +55,26 @@ Client = IgeClass.extend({
   setupEntities: function() {
     var test;
     return test = new IgeEntity().id('test').texture(SL.tex['irrelon']).dimensionsFromCell().mount(this.gameScene);
+  },
+  convertToLongString: function(shortString) {
+    var longUrl;
+    longUrl = null;
+    $.get("https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY + "&shortUrl=http://goo.gl/" + shortString, function(data) {
+      return longUrl = data.longUrl;
+    });
+    if ((longUrl != null) && longUrl.split('?q=').length > 0) {
+      return longUrl.split('?q=')[1];
+    }
+  },
+  convertToShortString: function(longString) {
+    var shortUrl;
+    shortUrl = null;
+    $.post("https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY, '{"longUrl": "foolmoron.io?q=' + longString + '"}', function(data) {
+      return shortUrl = data.id;
+    });
+    if (shortUrl != null) {
+      return shortUrl.split('/')[shortUrl.split('/').length - 1];
+    }
   },
   _resizeEvent: function() {
     var windowWidth, _ref1, _ref2;

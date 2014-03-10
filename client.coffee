@@ -1,5 +1,6 @@
 SL = window.SL = window.SL ? {}
 
+SL.GOOGLE_API_KEY = "AIzaSyClmp-OcgOFVF9fPybWuFAutXOlYr7PAl8"
 SL.SPRITE_DIRECTORY = "./sprites/"
 SL.FONTSHEET_DIRECTORY = "./font/"
 SL.AUDIO_DIRECTORY = "./audio/"
@@ -14,9 +15,11 @@ Client = IgeClass.extend
         # Engine setup
         ige.globalSmoothing true
         #ige.addComponent(IgeEditorComponent);
-        
-        # Setup this
-        self = this
+
+        # Setup AJAX to talk with google Url shortener
+        $.ajaxSetup
+            async: false
+            contentType: 'application/json'
         
         # Wait for our textures to load before continuing
         ige.on 'texturesLoaded', =>
@@ -76,6 +79,18 @@ Client = IgeClass.extend
             .texture SL.tex['irrelon']
             .dimensionsFromCell()
             .mount @gameScene
+
+    convertToLongString: (shortString) ->
+        longUrl = null
+        $.get "https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY + "&shortUrl=http://goo.gl/" + shortString, (data) ->
+            longUrl = data.longUrl # synchronously obtain original long URL from goo.gl
+        return longUrl.split('?q=')[1] if longUrl? && longUrl.split('?q=').length > 0
+
+    convertToShortString: (longString) ->
+        shortUrl = null
+        $.post "https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY, '{"longUrl": "foolmoron.io?q=' + longString + '"}', (data) ->
+            shortUrl = data.id # synchronously obtain shortened URL from goo.gl
+        return shortUrl.split('/')[shortUrl.split('/').length - 1] if shortUrl?
 
     _resizeEvent: ->
         unless @vpMain.resizing

@@ -1,5 +1,7 @@
 var igeClientConfig = {
 	include: [
+		'./js/entities/Grid.js',
+		'./js/entities/Tile.js',
 		'./js/client.js',
 		'./js/load.js',
 		'../howler/howler.min.js',

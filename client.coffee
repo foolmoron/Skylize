@@ -5,6 +5,9 @@ SL.SPRITE_DIRECTORY = "./sprites/"
 SL.FONTSHEET_DIRECTORY = "./font/"
 SL.AUDIO_DIRECTORY = "./audio/"
 
+SL.GRID_SIZE = 15
+SL.TILE_SIZE = 48
+
 SL.tex = {} # holds all textures
 SL.font = {} # hold all fontsheets
 
@@ -14,7 +17,7 @@ Client = IgeClass.extend
     init: ->
         # Engine setup
         ige.globalSmoothing true
-        #ige.addComponent(IgeEditorComponent);
+        #ige.addComponent IgeEditorComponent
 
         # Setup AJAX to talk with google Url shortener
         $.ajaxSetup
@@ -74,10 +77,9 @@ Client = IgeClass.extend
         do @vpMain._resizeEvent
 
     setupEntities: ->
-        test = new IgeEntity()
-            .id 'test'
-            .texture SL.tex['irrelon']
-            .dimensionsFromCell()
+        grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE)
+            .id 'grid'
+            .translateTo -(SL.GRID_SIZE / 2) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2) * SL.TILE_SIZE, 0
             .mount @gameScene
 
     convertToLongString: (shortString) ->

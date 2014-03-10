@@ -1,7 +1,8 @@
 SL = window.SL ? {}
 Client::load = ->
     SPRITE_DESCRIPTIONS = [
-        'irrelon.png'
+        'irrelon.png',
+        'side.png'
     ]
     CELLSHEET_DESCRIPTIONS = [
     ]

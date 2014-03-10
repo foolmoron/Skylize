@@ -11,6 +11,10 @@ SL.FONTSHEET_DIRECTORY = "./font/";
 
 SL.AUDIO_DIRECTORY = "./audio/";
 
+SL.GRID_SIZE = 15;
+
+SL.TILE_SIZE = 48;
+
 SL.tex = {};
 
 SL.font = {};
@@ -53,8 +57,8 @@ Client = IgeClass.extend({
     return this.vpMain._resizeEvent();
   },
   setupEntities: function() {
-    var test;
-    return test = new IgeEntity().id('test').texture(SL.tex['irrelon']).dimensionsFromCell().mount(this.gameScene);
+    var grid;
+    return grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE).id('grid').translateTo(-(SL.GRID_SIZE / 2) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2) * SL.TILE_SIZE, 0).mount(this.gameScene);
   },
   convertToLongString: function(shortString) {
     var longUrl;

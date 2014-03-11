@@ -124,7 +124,7 @@ Grid = IgeEntity.extend
                 @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
                 @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 3
-                currentColor = Light.COLOR.RED if currentColor == 'all'
+                currentColor = Light.COLOR.PINK if currentColor == 'all'
                 for light of tile._lights when light in ['f', 'b']
                     tile._lights[light].color(currentColor)
             when 4

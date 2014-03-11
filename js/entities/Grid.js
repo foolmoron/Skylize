@@ -4,20 +4,61 @@ var Grid;
 Grid = IgeEntity.extend({
   classId: 'Grid',
   init: function(_gridSize, _tileSize) {
-    var column, i, j, newTile, _i, _ref, _results;
+    var i, j, light, newTile, row, _i, _ref, _results;
     this._gridSize = _gridSize;
     this._tileSize = _tileSize;
     IgeEntity.prototype.init.call(this);
     this._grid = [];
     _results = [];
-    for (i = _i = 1, _ref = this._gridSize; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-      column = [];
+    for (i = _i = 0, _ref = this._gridSize; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      row = [];
       _results.push((function() {
         var _j, _ref1, _results1;
         _results1 = [];
-        for (j = _j = 1, _ref1 = this._gridSize; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 1 <= _ref1 ? ++_j : --_j) {
-          newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).mount(this);
-          _results1.push(column.push(newTile));
+        for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+          newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).depth(i * this._gridSize + j).mount(this);
+          row.push(newTile);
+          if (i === this._gridSize && j === this._gridSize) {
+            _results1.push((function() {
+              var _results2;
+              _results2 = [];
+              for (light in newTile._lights) {
+                newTile._lights[light].destroy();
+                _results2.push(delete newTile._lights[light]);
+              }
+              return _results2;
+            })());
+          } else if (i === this._gridSize) {
+            _results1.push((function() {
+              var _results2;
+              _results2 = [];
+              for (light in newTile._lights) {
+                if (light !== 'l') {
+                  newTile._lights[light].destroy();
+                  _results2.push(delete newTile._lights[light]);
+                } else {
+                  _results2.push(void 0);
+                }
+              }
+              return _results2;
+            })());
+          } else if (j === this._gridSize) {
+            _results1.push((function() {
+              var _results2;
+              _results2 = [];
+              for (light in newTile._lights) {
+                if (light !== 't') {
+                  newTile._lights[light].destroy();
+                  _results2.push(delete newTile._lights[light]);
+                } else {
+                  _results2.push(void 0);
+                }
+              }
+              return _results2;
+            })());
+          } else {
+            _results1.push(void 0);
+          }
         }
         return _results1;
       }).call(this));

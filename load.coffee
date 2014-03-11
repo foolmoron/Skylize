@@ -2,7 +2,24 @@ SL = window.SL ? {}
 Client::load = ->
     SPRITE_DESCRIPTIONS = [
         'irrelon.png',
-        'side.png'
+        'sidew.png',
+        'sider.png',
+        'sideg.png',
+        'sideb.png',
+        'sidep.png',
+        'sidey.png',
+        'diagw.png',
+        'diagr.png',
+        'diagg.png',
+        'diagb.png',
+        'diagp.png',
+        'diagy.png',
+        'midw.png',
+        'midr.png',
+        'midg.png',
+        'midb.png',
+        'midp.png',
+        'midy.png'
     ]
     CELLSHEET_DESCRIPTIONS = [
     ]

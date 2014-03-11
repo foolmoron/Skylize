@@ -79,7 +79,7 @@ Client = IgeClass.extend
     setupEntities: ->
         grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE)
             .id 'grid'
-            .translateTo -(SL.GRID_SIZE / 2) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2) * SL.TILE_SIZE, 0
+            .translateTo -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0
             .mount @gameScene
 
     convertToLongString: (shortString) ->

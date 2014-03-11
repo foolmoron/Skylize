@@ -6,7 +6,8 @@ Light = IgeEntity.extend({
   init: function(_type) {
     this._type = _type;
     IgeEntity.prototype.init.call(this);
-    return this.color(Light.COLOR.WHITE).dimensionsFromCell();
+    this.color(Light.COLOR.NONE);
+    return this.dimensionsFromCell();
   },
   color: function(color) {
     if (color === void 0) {

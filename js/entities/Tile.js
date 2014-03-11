@@ -7,12 +7,12 @@ Tile = IgeEntity.extend({
     this._size = _size;
     IgeEntity.prototype.init.call(this);
     this._lights = {};
-    this._lights.l = new Light(Light.TYPE.SIDE).translateTo(-this._size / 2, 0, 0).color(Light.COLOR.WHITE).depth(0).mount(this);
-    this._lights.t = new Light(Light.TYPE.SIDE).rotateTo(0, 0, 1.57).translateTo(0, -this._size / 2, 0).color(Light.COLOR.RED).depth(0).mount(this);
-    this._lights.f = new Light(Light.TYPE.DIAG).color(Light.COLOR.BLUE).depth(1).mount(this);
-    this._lights.b = new Light(Light.TYPE.DIAG).rotateTo(0, 0, 1.57).color(Light.COLOR.GREEN).depth(1).mount(this);
-    this._lights.v = new Light(Light.TYPE.MID).color(Light.COLOR.PINK).depth(2).mount(this);
-    return this._lights.h = new Light(Light.TYPE.MID).rotateTo(0, 0, 1.57).color(Light.COLOR.YELLOW).depth(2).mount(this);
+    this._lights.l = new Light(Light.TYPE.SIDE).translateTo(-this._size / 2, 0, 0).depth(0).mount(this);
+    this._lights.t = new Light(Light.TYPE.SIDE).rotateTo(0, 0, 1.57).translateTo(0, -this._size / 2, 0).depth(0).mount(this);
+    this._lights.f = new Light(Light.TYPE.DIAG).depth(1).mount(this);
+    this._lights.b = new Light(Light.TYPE.DIAG).rotateTo(0, 0, 1.57).depth(1).mount(this);
+    this._lights.v = new Light(Light.TYPE.MID).depth(2).mount(this);
+    return this._lights.h = new Light(Light.TYPE.MID).rotateTo(0, 0, 1.57).depth(2).mount(this);
   }
 });
 

@@ -5,6 +5,7 @@ Grid = IgeEntity.extend({
   classId: 'Grid',
   MOUSE_POSITION_HACK_X: -15,
   MOUSE_POSITION_HACK_Y: -75,
+  VELOCITY_TIERS: [5, 10, 20, 30, 40, 50],
   init: function(_gridSize, _tileSize) {
     var i, j, light, newTile, row, _i, _j, _ref, _ref1;
     this._gridSize = _gridSize;
@@ -13,6 +14,7 @@ Grid = IgeEntity.extend({
     this._grid = [];
     for (i = _i = 0, _ref = this._gridSize; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
       row = [];
+      this._grid.push(row);
       for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
         newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).depth(i * this._gridSize + j).mount(this);
         row.push(newTile);
@@ -23,21 +25,25 @@ Grid = IgeEntity.extend({
           }
         } else if (i === this._gridSize) {
           for (light in newTile._lights) {
-            if (light !== 'l') {
-              newTile._lights[light].destroy();
-              delete newTile._lights[light];
+            if (!(light !== 'l')) {
+              continue;
             }
+            newTile._lights[light].destroy();
+            delete newTile._lights[light];
           }
         } else if (j === this._gridSize) {
           for (light in newTile._lights) {
-            if (light !== 't') {
-              newTile._lights[light].destroy();
-              delete newTile._lights[light];
+            if (!(light !== 't')) {
+              continue;
             }
+            newTile._lights[light].destroy();
+            delete newTile._lights[light];
           }
         }
       }
     }
+    this._painting = false;
+    this._lastTouch = null;
     return this._mouseEventCatcher = new IgeEntity().width((this._gridSize + 1) * this._tileSize).height((this._gridSize + 1) * this._tileSize).translateTo((SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, (SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0).mouseDown((function(_this) {
       return function(evt) {
         var point;
@@ -45,7 +51,9 @@ Grid = IgeEntity.extend({
           x: evt.x + _this.MOUSE_POSITION_HACK_X,
           y: evt.y + _this.MOUSE_POSITION_HACK_Y
         };
-        return _this.handleDown(evt, point);
+        if (point.x >= 0 && point.y >= 0) {
+          return _this.handleDown(evt, point);
+        }
       };
     })(this)).mouseMove((function(_this) {
       return function(evt) {
@@ -54,7 +62,9 @@ Grid = IgeEntity.extend({
           x: evt.x + _this.MOUSE_POSITION_HACK_X,
           y: evt.y + _this.MOUSE_POSITION_HACK_Y
         };
-        return _this.handleMove(evt, point);
+        if (point.x >= 0 && point.y >= 0) {
+          return _this.handleMove(evt, point);
+        }
       };
     })(this)).mouseUp((function(_this) {
       return function(evt) {
@@ -63,18 +73,108 @@ Grid = IgeEntity.extend({
           x: evt.x + _this.MOUSE_POSITION_HACK_X,
           y: evt.y + _this.MOUSE_POSITION_HACK_Y
         };
-        return _this.handleUp(evt, point);
+        if (point.x >= 0 && point.y >= 0) {
+          return _this.handleUp(evt, point);
+        }
       };
     })(this)).mount(this);
   },
   handleDown: function(evt, point) {
-    return console.log(point);
+    this._painting = true;
+    return this._lastTouch = point;
   },
   handleMove: function(evt, point) {
-    return console.log(point);
+    var displacement, light, tier, tile, tilePos, velocity, velocityTier, _i, _len, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results, _results1, _results2;
+    if (!this._painting) {
+      return;
+    }
+    tilePos = {
+      x: Math.floor(point.x / this._tileSize),
+      y: Math.floor(point.y / this._tileSize)
+    };
+    tile = this._grid[tilePos.x][tilePos.y];
+    displacement = {
+      x: this._lastTouch.x - point.x,
+      y: this._lastTouch.y - point.y
+    };
+    velocity = Math.abs(displacement.x) + Math.abs(displacement.y);
+    velocityTier = 0;
+    _ref = this.VELOCITY_TIERS;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tier = _ref[_i];
+      if (tier <= velocity) {
+        velocityTier++;
+      }
+    }
+    this._lastTouch = point;
+    switch (velocityTier) {
+      case 0:
+        for (light in tile._lights) {
+          if (light === 't' || light === 'l' || light === 'f' || light === 'b' || light === 'h' || light === 'v') {
+            tile._lights[light].color(Light.COLOR.RED);
+          }
+        }
+        if ((_ref1 = this._grid[tilePos.x + 1]) != null) {
+          if ((_ref2 = _ref1[tilePos.y]) != null) {
+            _ref2._lights['l'].color(Light.COLOR.RED);
+          }
+        }
+        return (_ref3 = this._grid[tilePos.x]) != null ? (_ref4 = _ref3[tilePos.y + 1]) != null ? _ref4._lights['t'].color(Light.COLOR.RED) : void 0 : void 0;
+      case 1:
+        for (light in tile._lights) {
+          if (light === 't' || light === 'l' || light === 'f' || light === 'b') {
+            tile._lights[light].color(Light.COLOR.RED);
+          }
+        }
+        if ((_ref5 = this._grid[tilePos.x + 1]) != null) {
+          if ((_ref6 = _ref5[tilePos.y]) != null) {
+            _ref6._lights['l'].color(Light.COLOR.RED);
+          }
+        }
+        return (_ref7 = this._grid[tilePos.x]) != null ? (_ref8 = _ref7[tilePos.y + 1]) != null ? _ref8._lights['t'].color(Light.COLOR.RED) : void 0 : void 0;
+      case 2:
+        for (light in tile._lights) {
+          if (light === 't' || light === 'l') {
+            tile._lights[light].color(Light.COLOR.RED);
+          }
+        }
+        if ((_ref9 = this._grid[tilePos.x + 1]) != null) {
+          if ((_ref10 = _ref9[tilePos.y]) != null) {
+            _ref10._lights['l'].color(Light.COLOR.RED);
+          }
+        }
+        return (_ref11 = this._grid[tilePos.x]) != null ? (_ref12 = _ref11[tilePos.y + 1]) != null ? _ref12._lights['t'].color(Light.COLOR.RED) : void 0 : void 0;
+      case 3:
+        _results = [];
+        for (light in tile._lights) {
+          if (light === 'f' || light === 'b') {
+            _results.push(tile._lights[light].color(Light.COLOR.RED));
+          }
+        }
+        return _results;
+        break;
+      case 4:
+        _results1 = [];
+        for (light in tile._lights) {
+          if (light === 'h' || light === 'v') {
+            _results1.push(tile._lights[light].color(Light.COLOR.RED));
+          }
+        }
+        return _results1;
+        break;
+      case 5:
+        _results2 = [];
+        for (light in tile._lights) {
+          if (light === 'h') {
+            _results2.push(tile._lights[light].color(Light.COLOR.RED));
+          }
+        }
+        return _results2;
+    }
   },
   handleUp: function(evt, point) {
-    return console.log(point);
+    this._painting = false;
+    return this._lastTouch = null;
   }
 });
 

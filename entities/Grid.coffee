@@ -23,15 +23,13 @@ Grid = IgeEntity.extend
                         newTile._lights[light].destroy()
                         delete newTile._lights[light]
                 else if i == @_gridSize
-                    for light of newTile._lights
-                        if light != 'l'
-                            newTile._lights[light].destroy()
-                            delete newTile._lights[light]
+                    for light of newTile._lights when light != 'l'
+                        newTile._lights[light].destroy()
+                        delete newTile._lights[light]
                 else if j == @_gridSize
-                    for light of newTile._lights
-                        if light != 't'
-                            newTile._lights[light].destroy()
-                            delete newTile._lights[light]
+                    for light of newTile._lights when light != 't'
+                        newTile._lights[light].destroy()
+                        delete newTile._lights[light]
 
         @_mouseEventCatcher = new IgeEntity()
             .width (@_gridSize + 1) * @_tileSize

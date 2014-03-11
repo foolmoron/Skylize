@@ -37,7 +37,13 @@ Client = IgeClass.extend
                     
                     do @setupScene
                     do @setupEntities
-        
+
+                    urlParameter = location.search.split("?")[1] if location.search.length > 0
+                    if urlParameter
+                        longString = urlParameter.substring 2 if urlParameter[0] == 'l'
+                        longString = @convertToLongString urlParameter.substring 2 if urlParameter[0] == 's'
+                        if longString?.length > 0
+                            @grid.deserialize(longString)
         do @load
 
     setupScene: ->
@@ -78,10 +84,24 @@ Client = IgeClass.extend
         do @vpMain._resizeEvent
 
     setupEntities: ->
-        grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE)
+        @grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE)
             .id 'grid'
             .translateTo -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0
             .mount @gameScene
+
+        @saveShareButton = new IgeUiEntity()
+            .texture SL.tex['saveshare']
+            .dimensionsFromCell()
+            .top 5
+            .right 10
+            .mouseDown =>
+                longString = @grid.serialize()
+                shortString = @convertToShortString(longString)
+                if (shortString)
+                    prompt "Use this URL to share you art with others, or bookmark it to come back later:", "http://foolmoron.itch.io/skylize?s=#{shortString}"
+                else
+                    prompt "Something went wrong with the URL shortener, so you can't have a URL to share.  But you can use this monstrous URL to come back to your art later, if you want:", "http://foolmoron.itch.io/skylize?l=#{longString}"
+            .mount(@fgScene)
 
     convertToLongString: (shortString) ->
         longUrl = null

@@ -5,7 +5,7 @@ SL = (_ref = window.SL) != null ? _ref : {};
 
 Client.prototype.load = function() {
   var CELLSHEET_DESCRIPTIONS, FONTSHEET_DESCRIPTIONS, SPRITE_DESCRIPTIONS, description, index, _i, _j, _k, _len, _len1, _len2, _results;
-  SPRITE_DESCRIPTIONS = ['irrelon.png', 'sidew.png', 'sider.png', 'sideg.png', 'sideb.png', 'sidep.png', 'sidey.png', 'diagw.png', 'diagr.png', 'diagg.png', 'diagb.png', 'diagp.png', 'diagy.png', 'midw.png', 'midr.png', 'midg.png', 'midb.png', 'midp.png', 'midy.png', 'pickernone.png', 'pickerall.png', 'pickerw.png', 'pickerr.png', 'pickerg.png', 'pickerb.png', 'pickerp.png', 'pickery.png'];
+  SPRITE_DESCRIPTIONS = ['irrelon.png', 'sidew.png', 'sider.png', 'sideg.png', 'sideb.png', 'sidep.png', 'sidey.png', 'diagw.png', 'diagr.png', 'diagg.png', 'diagb.png', 'diagp.png', 'diagy.png', 'midw.png', 'midr.png', 'midg.png', 'midb.png', 'midp.png', 'midy.png', 'pickernone.png', 'pickerall.png', 'pickerw.png', 'pickerr.png', 'pickerg.png', 'pickerb.png', 'pickerp.png', 'pickery.png', 'saveshare.png'];
   CELLSHEET_DESCRIPTIONS = [];
   FONTSHEET_DESCRIPTIONS = [];
   for (_i = 0, _len = SPRITE_DESCRIPTIONS.length; _i < _len; _i++) {

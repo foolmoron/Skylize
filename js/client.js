@@ -24,18 +24,34 @@ Client = IgeClass.extend({
   init: function() {
     ige.globalSmoothing(true);
     ige.addComponent(IgeEditorComponent);
-    $.ajaxSetup({
-      async: false,
-      contentType: 'application/json'
-    });
     ige.on('texturesLoaded', (function(_this) {
       return function() {
         ige.createFrontBuffer(true);
         return ige.start(function(success) {
+          var longString, urlParameter;
           if (success) {
+            $.ajaxSetup({
+              async: false,
+              contentType: 'application/json',
+              processData: false
+            });
             ige.viewportDepth(true);
             _this.setupScene();
-            return _this.setupEntities();
+            _this.setupEntities();
+            if (location.search.length > 0) {
+              urlParameter = location.search.split("?")[1];
+            }
+            if (urlParameter) {
+              if (urlParameter[0] === 'l') {
+                longString = urlParameter.substring(2);
+              }
+              if (urlParameter[0] === 's') {
+                longString = _this.convertToLongString(urlParameter.substring(2));
+              }
+              if ((longString != null ? longString.length : void 0) > 0) {
+                return _this.grid.deserialize(longString);
+              }
+            }
           }
         });
       };
@@ -58,8 +74,19 @@ Client = IgeClass.extend({
     return this.vpMain._resizeEvent();
   },
   setupEntities: function() {
-    var grid;
-    return grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE).id('grid').translateTo(-(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0).mount(this.gameScene);
+    this.grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE).id('grid').translateTo(-(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0).mount(this.gameScene);
+    return this.saveShareButton = new IgeUiEntity().texture(SL.tex['saveshare']).dimensionsFromCell().top(5).right(10).mouseDown((function(_this) {
+      return function() {
+        var longString, shortString;
+        longString = _this.grid.serialize();
+        shortString = _this.convertToShortString(longString);
+        if (shortString) {
+          return prompt("Use this URL to share you art with others, or bookmark it to come back later:", "http://foolmoron.itch.io/skylize?s=" + shortString);
+        } else {
+          return prompt("Something went wrong with the URL shortener, so you can't have a URL to share.  But you can use this monstrous URL to come back to your art later, if you want:", "http://foolmoron.itch.io/skylize?l=" + longString);
+        }
+      };
+    })(this)).mount(this.fgScene);
   },
   convertToLongString: function(shortString) {
     var longUrl;

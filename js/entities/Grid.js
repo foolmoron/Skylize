@@ -5,12 +5,12 @@ Grid = IgeEntity.extend({
   classId: 'Grid',
   MOUSE_POSITION_HACK_X: -15,
   MOUSE_POSITION_HACK_Y: -75,
-  PICKER_OFFSETX: 126,
+  PICKER_OFFSETX: 100,
   PICKER_OFFSETY: -65,
   PICKER_GAPX: 60,
   PICKER_SIZE: 50,
   PICKER_FADE_OPACITY: 0.25,
-  VELOCITY_TIERS: [5, 16, 26, 36, 46, 55],
+  VELOCITY_TIERS: [7, 16, 26, 36, 46, 55],
   init: function(_gridSize, _tileSize) {
     var color, colors, i, j, key, light, newTile, pickerX, row, self, value, _i, _j, _k, _len, _ref, _ref1;
     this._gridSize = _gridSize;
@@ -124,7 +124,7 @@ Grid = IgeEntity.extend({
     return this._lastTouch = point;
   },
   handleMove: function(evt, point) {
-    var currentColor, displacement, light, tier, tile, tilePos, velocity, velocityTier, _i, _len, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results, _results1, _results2;
+    var currentColor, displacement, light, tier, tile, tilePos, velocity, velocityTier, _i, _len, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results, _results1, _results2;
     if (!this._painting) {
       return;
     }
@@ -160,10 +160,12 @@ Grid = IgeEntity.extend({
         }
         if ((_ref1 = this._grid[tilePos.x + 1]) != null) {
           if ((_ref2 = _ref1[tilePos.y]) != null) {
-            _ref2._lights['l'].color(currentColor);
+            if ((_ref3 = _ref2._lights['l']) != null) {
+              _ref3.color(currentColor);
+            }
           }
         }
-        return (_ref3 = this._grid[tilePos.x]) != null ? (_ref4 = _ref3[tilePos.y + 1]) != null ? _ref4._lights['t'].color(currentColor) : void 0 : void 0;
+        return (_ref4 = this._grid[tilePos.x]) != null ? (_ref5 = _ref4[tilePos.y + 1]) != null ? (_ref6 = _ref5._lights['t']) != null ? _ref6.color(currentColor) : void 0 : void 0 : void 0;
       case 1:
         if (currentColor === 'all') {
           currentColor = Light.COLOR.BLUE;
@@ -173,12 +175,14 @@ Grid = IgeEntity.extend({
             tile._lights[light].color(currentColor);
           }
         }
-        if ((_ref5 = this._grid[tilePos.x + 1]) != null) {
-          if ((_ref6 = _ref5[tilePos.y]) != null) {
-            _ref6._lights['l'].color(currentColor);
+        if ((_ref7 = this._grid[tilePos.x + 1]) != null) {
+          if ((_ref8 = _ref7[tilePos.y]) != null) {
+            if ((_ref9 = _ref8._lights['l']) != null) {
+              _ref9.color(currentColor);
+            }
           }
         }
-        return (_ref7 = this._grid[tilePos.x]) != null ? (_ref8 = _ref7[tilePos.y + 1]) != null ? _ref8._lights['t'].color(currentColor) : void 0 : void 0;
+        return (_ref10 = this._grid[tilePos.x]) != null ? (_ref11 = _ref10[tilePos.y + 1]) != null ? (_ref12 = _ref11._lights['t']) != null ? _ref12.color(currentColor) : void 0 : void 0 : void 0;
       case 2:
         if (currentColor === 'all') {
           currentColor = Light.COLOR.WHITE;
@@ -188,15 +192,17 @@ Grid = IgeEntity.extend({
             tile._lights[light].color(currentColor);
           }
         }
-        if ((_ref9 = this._grid[tilePos.x + 1]) != null) {
-          if ((_ref10 = _ref9[tilePos.y]) != null) {
-            _ref10._lights['l'].color(currentColor);
+        if ((_ref13 = this._grid[tilePos.x + 1]) != null) {
+          if ((_ref14 = _ref13[tilePos.y]) != null) {
+            if ((_ref15 = _ref14._lights['l']) != null) {
+              _ref15.color(currentColor);
+            }
           }
         }
-        return (_ref11 = this._grid[tilePos.x]) != null ? (_ref12 = _ref11[tilePos.y + 1]) != null ? _ref12._lights['t'].color(currentColor) : void 0 : void 0;
+        return (_ref16 = this._grid[tilePos.x]) != null ? (_ref17 = _ref16[tilePos.y + 1]) != null ? (_ref18 = _ref17._lights['t']) != null ? _ref18.color(currentColor) : void 0 : void 0 : void 0;
       case 3:
         if (currentColor === 'all') {
-          currentColor = Light.COLOR.RED;
+          currentColor = Light.COLOR.PINK;
         }
         _results = [];
         for (light in tile._lights) {
@@ -234,6 +240,72 @@ Grid = IgeEntity.extend({
   handleUp: function(evt, point) {
     this._painting = false;
     return this._lastTouch = null;
+  },
+  serialize: function() {
+    var bareGrid, i, j, light, row, tile, tileDescriptor, _i, _j, _ref, _ref1;
+    bareGrid = [];
+    for (i = _i = 0, _ref = this._gridSize; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      row = [];
+      bareGrid.push(row);
+      for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+        tile = this._grid[i][j];
+        tileDescriptor = "";
+        for (light in tile._lights) {
+          if (tile._lights[light].color() !== Light.COLOR.NONE) {
+            tileDescriptor += light + tile._lights[light].color();
+          }
+        }
+        row.push(tileDescriptor);
+      }
+    }
+    return btoa(JSON.stringify(bareGrid));
+  },
+  deserialize: function(string) {
+    var color, element, error, i, j, json, k, light, row, tile, tileDescriptor, _i, _j, _k, _l, _len, _ref, _ref1, _ref2;
+    json = (function() {
+      try {
+        return JSON.parse(atob(string));
+      } catch (_error) {
+        error = _error;
+        return null;
+      }
+    })();
+    if (json == null) {
+      return;
+    }
+    if (json.length !== (this._gridSize + 1)) {
+      return;
+    }
+    for (_i = 0, _len = json.length; _i < _len; _i++) {
+      element = json[_i];
+      if (element.length !== (this._gridSize + 1)) {
+        return;
+      }
+    }
+    for (i = _j = 0, _ref = this._gridSize; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
+      row = this._grid[i];
+      for (j = _k = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _k <= _ref1 : _k >= _ref1; j = 0 <= _ref1 ? ++_k : --_k) {
+        try {
+          tile = row[j];
+          for (light in tile._lights) {
+            if (light === 't' || light === 'l' || light === 'f' || light === 'b' || light === 'h' || light === 'v') {
+              tile._lights[light].color(Light.COLOR.NONE);
+            }
+          }
+          tileDescriptor = json[i][j];
+          if (tileDescriptor.length > 0) {
+            for (k = _l = 1, _ref2 = tileDescriptor.length; _l <= _ref2; k = _l += 2) {
+              light = tileDescriptor[k - 1];
+              color = tileDescriptor[k];
+              tile._lights[light].color(color);
+            }
+          }
+        } catch (_error) {
+          error = _error;
+        }
+      }
+    }
+    return true;
   }
 });
 

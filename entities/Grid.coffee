@@ -4,7 +4,7 @@ Grid = IgeEntity.extend
     MOUSE_POSITION_HACK_X: -15
     MOUSE_POSITION_HACK_Y: -75
 
-    PICKER_OFFSETX: 126
+    PICKER_OFFSETX: 100
     PICKER_OFFSETY: -65
     PICKER_GAPX: 60
     PICKER_SIZE: 50
@@ -139,5 +139,47 @@ Grid = IgeEntity.extend
     handleUp: (evt, point) ->
         @_painting = false
         @_lastTouch = null
+
+    serialize: ->
+        bareGrid = []
+        for i in [0..@_gridSize]
+            row = []
+            bareGrid.push row
+            for j in [0..@_gridSize]
+                tile = @_grid[i][j]
+                tileDescriptor = ""
+                for light of tile._lights
+                    if tile._lights[light].color() != Light.COLOR.NONE
+                        tileDescriptor += light + tile._lights[light].color()
+                row.push tileDescriptor
+
+        return btoa JSON.stringify bareGrid
+
+    deserialize: (string) ->
+        json = try JSON.parse atob string catch error then null
+        unless json?
+            return
+
+        return if json.length != (@_gridSize + 1)
+        return for element in json when element.length != (@_gridSize + 1)
+
+        for i in [0..@_gridSize]
+            row = @_grid[i]
+            for j in [0..@_gridSize]
+                try
+                    tile = row[j]
+                    for light of tile._lights when light in ['t', 'l', 'f', 'b', 'h', 'v']
+                        tile._lights[light].color(Light.COLOR.NONE)
+
+                    tileDescriptor = json[i][j]
+                    if tileDescriptor.length > 0
+                        for k in [1..tileDescriptor.length] by 2
+                            light = tileDescriptor[k - 1]
+                            color = tileDescriptor[k]
+                            tile._lights[light].color(color)
+                catch error
+
+        return true
+
 
 module.exports = Grid if module?.exports?

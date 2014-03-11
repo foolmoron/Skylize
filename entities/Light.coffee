@@ -4,8 +4,9 @@ Light = IgeEntity.extend
     init: (@_type) ->
         IgeEntity::init.call @
         
-        @color(Light.COLOR.NONE)
+        @color(Light.COLOR.WHITE)
         @dimensionsFromCell()
+        @color(Light.COLOR.NONE)
 
     color: (color) ->
         if color == undefined

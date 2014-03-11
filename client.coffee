@@ -17,7 +17,7 @@ Client = IgeClass.extend
     init: ->
         # Engine setup
         ige.globalSmoothing true
-        ige.addComponent IgeEditorComponent
+        #ige.addComponent IgeEditorComponent
 
         
         # Wait for our textures to load before continuing
@@ -32,7 +32,7 @@ Client = IgeClass.extend
                         async: false
                         contentType: 'application/json'
                         processData: false
-                        
+
                     ige.viewportDepth true
                     
                     do @setupScene

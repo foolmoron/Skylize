@@ -23,7 +23,6 @@ Client = IgeClass.extend({
   classId: 'Client',
   init: function() {
     ige.globalSmoothing(true);
-    ige.addComponent(IgeEditorComponent);
     ige.on('texturesLoaded', (function(_this) {
       return function() {
         ige.createFrontBuffer(true);

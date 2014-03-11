@@ -3,6 +3,7 @@ Tile = IgeEntity.extend
     
     init: (@_size) ->
         IgeEntity::init.call @
+        
         @_lights = {}
         @_lights.l = new Light(Light.TYPE.SIDE)
             .translateTo -@_size/2, 0, 0

@@ -19,7 +19,7 @@ Client::load = ->
         'midg.png',
         'midb.png',
         'midp.png',
-        'midy.png'
+        'midy.png',
     ]
     CELLSHEET_DESCRIPTIONS = [
     ]

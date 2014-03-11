@@ -3,67 +3,78 @@ var Grid;
 
 Grid = IgeEntity.extend({
   classId: 'Grid',
+  MOUSE_POSITION_HACK_X: -15,
+  MOUSE_POSITION_HACK_Y: -75,
   init: function(_gridSize, _tileSize) {
-    var i, j, light, newTile, row, _i, _ref, _results;
+    var i, j, light, newTile, row, _i, _j, _ref, _ref1;
     this._gridSize = _gridSize;
     this._tileSize = _tileSize;
     IgeEntity.prototype.init.call(this);
     this._grid = [];
-    _results = [];
     for (i = _i = 0, _ref = this._gridSize; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
       row = [];
-      _results.push((function() {
-        var _j, _ref1, _results1;
-        _results1 = [];
-        for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
-          newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).depth(i * this._gridSize + j).mount(this);
-          row.push(newTile);
-          if (i === this._gridSize && j === this._gridSize) {
-            _results1.push((function() {
-              var _results2;
-              _results2 = [];
-              for (light in newTile._lights) {
-                newTile._lights[light].destroy();
-                _results2.push(delete newTile._lights[light]);
-              }
-              return _results2;
-            })());
-          } else if (i === this._gridSize) {
-            _results1.push((function() {
-              var _results2;
-              _results2 = [];
-              for (light in newTile._lights) {
-                if (light !== 'l') {
-                  newTile._lights[light].destroy();
-                  _results2.push(delete newTile._lights[light]);
-                } else {
-                  _results2.push(void 0);
-                }
-              }
-              return _results2;
-            })());
-          } else if (j === this._gridSize) {
-            _results1.push((function() {
-              var _results2;
-              _results2 = [];
-              for (light in newTile._lights) {
-                if (light !== 't') {
-                  newTile._lights[light].destroy();
-                  _results2.push(delete newTile._lights[light]);
-                } else {
-                  _results2.push(void 0);
-                }
-              }
-              return _results2;
-            })());
-          } else {
-            _results1.push(void 0);
+      for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+        newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).depth(i * this._gridSize + j).mount(this);
+        row.push(newTile);
+        if (i === this._gridSize && j === this._gridSize) {
+          for (light in newTile._lights) {
+            newTile._lights[light].destroy();
+            delete newTile._lights[light];
+          }
+        } else if (i === this._gridSize) {
+          for (light in newTile._lights) {
+            if (light !== 'l') {
+              newTile._lights[light].destroy();
+              delete newTile._lights[light];
+            }
+          }
+        } else if (j === this._gridSize) {
+          for (light in newTile._lights) {
+            if (light !== 't') {
+              newTile._lights[light].destroy();
+              delete newTile._lights[light];
+            }
           }
         }
-        return _results1;
-      }).call(this));
+      }
     }
-    return _results;
+    return this._mouseEventCatcher = new IgeEntity().width((this._gridSize + 1) * this._tileSize).height((this._gridSize + 1) * this._tileSize).translateTo((SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, (SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0).mouseDown((function(_this) {
+      return function(evt) {
+        var point;
+        point = {
+          x: evt.x + _this.MOUSE_POSITION_HACK_X,
+          y: evt.y + _this.MOUSE_POSITION_HACK_Y
+        };
+        return _this.handleDown(evt, point);
+      };
+    })(this)).mouseMove((function(_this) {
+      return function(evt) {
+        var point;
+        point = {
+          x: evt.x + _this.MOUSE_POSITION_HACK_X,
+          y: evt.y + _this.MOUSE_POSITION_HACK_Y
+        };
+        return _this.handleMove(evt, point);
+      };
+    })(this)).mouseUp((function(_this) {
+      return function(evt) {
+        var point;
+        point = {
+          x: evt.x + _this.MOUSE_POSITION_HACK_X,
+          y: evt.y + _this.MOUSE_POSITION_HACK_Y
+        };
+        return _this.handleUp(evt, point);
+      };
+    })(this)).mount(this);
+  },
+  handleDown: function(evt, point) {
+    return console.log(point);
+  },
+  handleMove: function(evt, point) {
+    return console.log(point);
+  },
+  handleUp: function(evt, point) {
+    return console.log(point);
   }
 });
 

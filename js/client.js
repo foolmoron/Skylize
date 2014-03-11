@@ -23,6 +23,7 @@ Client = IgeClass.extend({
   classId: 'Client',
   init: function() {
     ige.globalSmoothing(true);
+    ige.addComponent(IgeEditorComponent);
     $.ajaxSetup({
       async: false,
       contentType: 'application/json'

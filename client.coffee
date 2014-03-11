@@ -17,7 +17,7 @@ Client = IgeClass.extend
     init: ->
         # Engine setup
         ige.globalSmoothing true
-        #ige.addComponent IgeEditorComponent
+        ige.addComponent IgeEditorComponent
 
         # Setup AJAX to talk with google Url shortener
         $.ajaxSetup
@@ -49,7 +49,6 @@ Client = IgeClass.extend
             .scene @mainScene
             .drawBounds false
             .drawBoundsData false
-            #.drawCompositeBounds true
             .mount ige
 
         @bgScene = new IgeScene2d()

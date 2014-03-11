@@ -10,7 +10,7 @@ Grid = IgeEntity.extend
     PICKER_SIZE: 50
     PICKER_FADE_OPACITY: 0.25
 
-    VELOCITY_TIERS: [5, 16, 26, 36, 46, 55]
+    VELOCITY_TIERS: [7, 16, 26, 36, 46, 55]
     
     init: (@_gridSize, @_tileSize) ->
         IgeEntity::init.call @

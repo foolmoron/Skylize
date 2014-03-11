@@ -4,10 +4,40 @@ Grid = IgeEntity.extend
     MOUSE_POSITION_HACK_X: -15
     MOUSE_POSITION_HACK_Y: -75
 
-    VELOCITY_TIERS: [5, 10, 20, 30, 40, 50]
+    PICKER_OFFSETX: 126
+    PICKER_OFFSETY: -65
+    PICKER_GAPX: 60
+    PICKER_SIZE: 50
+    PICKER_FADE_OPACITY: 0.25
+
+    VELOCITY_TIERS: [5, 16, 26, 36, 46, 55]
     
     init: (@_gridSize, @_tileSize) ->
         IgeEntity::init.call @
+        self = @
+
+        @pickers = {}
+        pickerX = @PICKER_OFFSETX
+        colors = (value for key, value of Light.COLOR)
+        colors.push 'all'
+        for color in colors
+            self.pickers[color] = new IgeEntity()
+                .texture(SL.tex['picker' + color])
+                .width self.PICKER_SIZE
+                .height self.PICKER_SIZE
+                .opacity self.PICKER_FADE_OPACITY
+                .mouseDown ->
+                    self._currentColor = @_color
+                    for key, picker of self.pickers
+                        if key == @_color
+                            picker.opacity 1
+                        else
+                            picker.opacity self.PICKER_FADE_OPACITY
+                .translateTo pickerX, self.PICKER_OFFSETY, 0
+                .mount self
+            self.pickers[color]._color = color
+            pickerX += @PICKER_GAPX
+        @pickers['all'].mouseDown().call @pickers['all']
 
         @_grid = []
         for i in [0..@_gridSize] # index at 0 to add extra column
@@ -73,31 +103,38 @@ Grid = IgeEntity.extend
         velocityTier++ for tier in @VELOCITY_TIERS when tier <= velocity
         @_lastTouch = point
 
+        currentColor = @_currentColor
         switch velocityTier
             when 0
+                currentColor = Light.COLOR.RED if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l', 'f', 'b', 'h', 'v']
-                    tile._lights[light].color(Light.COLOR.RED)
-                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(Light.COLOR.RED)
-                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(Light.COLOR.RED)
+                    tile._lights[light].color(currentColor)
+                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(currentColor)
+                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(currentColor)
             when 1
+                currentColor = Light.COLOR.BLUE if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l', 'f', 'b']
-                    tile._lights[light].color(Light.COLOR.RED)
-                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(Light.COLOR.RED)
-                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(Light.COLOR.RED)
+                    tile._lights[light].color(currentColor)
+                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(currentColor)
+                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(currentColor)
             when 2
+                currentColor = Light.COLOR.WHITE if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l']
-                    tile._lights[light].color(Light.COLOR.RED)
-                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(Light.COLOR.RED)
-                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(Light.COLOR.RED)
+                    tile._lights[light].color(currentColor)
+                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(currentColor)
+                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(currentColor)
             when 3
+                currentColor = Light.COLOR.RED if currentColor == 'all'
                 for light of tile._lights when light in ['f', 'b']
-                    tile._lights[light].color(Light.COLOR.RED)
+                    tile._lights[light].color(currentColor)
             when 4
+                currentColor = Light.COLOR.GREEN if currentColor == 'all'
                 for light of tile._lights when light in ['h', 'v']
-                    tile._lights[light].color(Light.COLOR.RED)
+                    tile._lights[light].color(currentColor)
             when 5
+                currentColor = Light.COLOR.YELLOW if currentColor == 'all'
                 for light of tile._lights when light in ['h']
-                    tile._lights[light].color(Light.COLOR.RED)
+                    tile._lights[light].color(currentColor)
 
     handleUp: (evt, point) ->
         @_painting = false

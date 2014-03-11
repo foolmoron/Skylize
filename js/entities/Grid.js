@@ -5,17 +5,57 @@ Grid = IgeEntity.extend({
   classId: 'Grid',
   MOUSE_POSITION_HACK_X: -15,
   MOUSE_POSITION_HACK_Y: -75,
-  VELOCITY_TIERS: [5, 10, 20, 30, 40, 50],
+  PICKER_OFFSETX: 126,
+  PICKER_OFFSETY: -65,
+  PICKER_GAPX: 60,
+  PICKER_SIZE: 50,
+  PICKER_FADE_OPACITY: 0.25,
+  VELOCITY_TIERS: [5, 16, 26, 36, 46, 55],
   init: function(_gridSize, _tileSize) {
-    var i, j, light, newTile, row, _i, _j, _ref, _ref1;
+    var color, colors, i, j, key, light, newTile, pickerX, row, self, value, _i, _j, _k, _len, _ref, _ref1;
     this._gridSize = _gridSize;
     this._tileSize = _tileSize;
     IgeEntity.prototype.init.call(this);
+    self = this;
+    this.pickers = {};
+    pickerX = this.PICKER_OFFSETX;
+    colors = (function() {
+      var _ref, _results;
+      _ref = Light.COLOR;
+      _results = [];
+      for (key in _ref) {
+        value = _ref[key];
+        _results.push(value);
+      }
+      return _results;
+    })();
+    colors.push('all');
+    for (_i = 0, _len = colors.length; _i < _len; _i++) {
+      color = colors[_i];
+      self.pickers[color] = new IgeEntity().texture(SL.tex['picker' + color]).width(self.PICKER_SIZE).height(self.PICKER_SIZE).opacity(self.PICKER_FADE_OPACITY).mouseDown(function() {
+        var picker, _ref, _results;
+        self._currentColor = this._color;
+        _ref = self.pickers;
+        _results = [];
+        for (key in _ref) {
+          picker = _ref[key];
+          if (key === this._color) {
+            _results.push(picker.opacity(1));
+          } else {
+            _results.push(picker.opacity(self.PICKER_FADE_OPACITY));
+          }
+        }
+        return _results;
+      }).translateTo(pickerX, self.PICKER_OFFSETY, 0).mount(self);
+      self.pickers[color]._color = color;
+      pickerX += this.PICKER_GAPX;
+    }
+    this.pickers['all'].mouseDown().call(this.pickers['all']);
     this._grid = [];
-    for (i = _i = 0, _ref = this._gridSize; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+    for (i = _j = 0, _ref = this._gridSize; 0 <= _ref ? _j <= _ref : _j >= _ref; i = 0 <= _ref ? ++_j : --_j) {
       row = [];
       this._grid.push(row);
-      for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+      for (j = _k = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _k <= _ref1 : _k >= _ref1; j = 0 <= _ref1 ? ++_k : --_k) {
         newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).depth(i * this._gridSize + j).mount(this);
         row.push(newTile);
         if (i === this._gridSize && j === this._gridSize) {
@@ -84,7 +124,7 @@ Grid = IgeEntity.extend({
     return this._lastTouch = point;
   },
   handleMove: function(evt, point) {
-    var displacement, light, tier, tile, tilePos, velocity, velocityTier, _i, _len, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results, _results1, _results2;
+    var currentColor, displacement, light, tier, tile, tilePos, velocity, velocityTier, _i, _len, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results, _results1, _results2;
     if (!this._painting) {
       return;
     }
@@ -107,66 +147,85 @@ Grid = IgeEntity.extend({
       }
     }
     this._lastTouch = point;
+    currentColor = this._currentColor;
     switch (velocityTier) {
       case 0:
+        if (currentColor === 'all') {
+          currentColor = Light.COLOR.RED;
+        }
         for (light in tile._lights) {
           if (light === 't' || light === 'l' || light === 'f' || light === 'b' || light === 'h' || light === 'v') {
-            tile._lights[light].color(Light.COLOR.RED);
+            tile._lights[light].color(currentColor);
           }
         }
         if ((_ref1 = this._grid[tilePos.x + 1]) != null) {
           if ((_ref2 = _ref1[tilePos.y]) != null) {
-            _ref2._lights['l'].color(Light.COLOR.RED);
+            _ref2._lights['l'].color(currentColor);
           }
         }
-        return (_ref3 = this._grid[tilePos.x]) != null ? (_ref4 = _ref3[tilePos.y + 1]) != null ? _ref4._lights['t'].color(Light.COLOR.RED) : void 0 : void 0;
+        return (_ref3 = this._grid[tilePos.x]) != null ? (_ref4 = _ref3[tilePos.y + 1]) != null ? _ref4._lights['t'].color(currentColor) : void 0 : void 0;
       case 1:
+        if (currentColor === 'all') {
+          currentColor = Light.COLOR.BLUE;
+        }
         for (light in tile._lights) {
           if (light === 't' || light === 'l' || light === 'f' || light === 'b') {
-            tile._lights[light].color(Light.COLOR.RED);
+            tile._lights[light].color(currentColor);
           }
         }
         if ((_ref5 = this._grid[tilePos.x + 1]) != null) {
           if ((_ref6 = _ref5[tilePos.y]) != null) {
-            _ref6._lights['l'].color(Light.COLOR.RED);
+            _ref6._lights['l'].color(currentColor);
           }
         }
-        return (_ref7 = this._grid[tilePos.x]) != null ? (_ref8 = _ref7[tilePos.y + 1]) != null ? _ref8._lights['t'].color(Light.COLOR.RED) : void 0 : void 0;
+        return (_ref7 = this._grid[tilePos.x]) != null ? (_ref8 = _ref7[tilePos.y + 1]) != null ? _ref8._lights['t'].color(currentColor) : void 0 : void 0;
       case 2:
+        if (currentColor === 'all') {
+          currentColor = Light.COLOR.WHITE;
+        }
         for (light in tile._lights) {
           if (light === 't' || light === 'l') {
-            tile._lights[light].color(Light.COLOR.RED);
+            tile._lights[light].color(currentColor);
           }
         }
         if ((_ref9 = this._grid[tilePos.x + 1]) != null) {
           if ((_ref10 = _ref9[tilePos.y]) != null) {
-            _ref10._lights['l'].color(Light.COLOR.RED);
+            _ref10._lights['l'].color(currentColor);
           }
         }
-        return (_ref11 = this._grid[tilePos.x]) != null ? (_ref12 = _ref11[tilePos.y + 1]) != null ? _ref12._lights['t'].color(Light.COLOR.RED) : void 0 : void 0;
+        return (_ref11 = this._grid[tilePos.x]) != null ? (_ref12 = _ref11[tilePos.y + 1]) != null ? _ref12._lights['t'].color(currentColor) : void 0 : void 0;
       case 3:
+        if (currentColor === 'all') {
+          currentColor = Light.COLOR.RED;
+        }
         _results = [];
         for (light in tile._lights) {
           if (light === 'f' || light === 'b') {
-            _results.push(tile._lights[light].color(Light.COLOR.RED));
+            _results.push(tile._lights[light].color(currentColor));
           }
         }
         return _results;
         break;
       case 4:
+        if (currentColor === 'all') {
+          currentColor = Light.COLOR.GREEN;
+        }
         _results1 = [];
         for (light in tile._lights) {
           if (light === 'h' || light === 'v') {
-            _results1.push(tile._lights[light].color(Light.COLOR.RED));
+            _results1.push(tile._lights[light].color(currentColor));
           }
         }
         return _results1;
         break;
       case 5:
+        if (currentColor === 'all') {
+          currentColor = Light.COLOR.YELLOW;
+        }
         _results2 = [];
         for (light in tile._lights) {
           if (light === 'h') {
-            _results2.push(tile._lights[light].color(Light.COLOR.RED));
+            _results2.push(tile._lights[light].color(currentColor));
           }
         }
         return _results2;

@@ -20,6 +20,14 @@ Client::load = ->
         'midb.png',
         'midp.png',
         'midy.png',
+        'pickernone.png',
+        'pickerall.png',
+        'pickerw.png',
+        'pickerr.png',
+        'pickerg.png',
+        'pickerb.png',
+        'pickerp.png',
+        'pickery.png',
     ]
     CELLSHEET_DESCRIPTIONS = [
     ]

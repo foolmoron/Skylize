@@ -19,10 +19,6 @@ Client = IgeClass.extend
         ige.globalSmoothing true
         ige.addComponent IgeEditorComponent
 
-        # Setup AJAX to talk with google Url shortener
-        $.ajaxSetup
-            async: false
-            contentType: 'application/json'
         
         # Wait for our textures to load before continuing
         ige.on 'texturesLoaded', =>
@@ -31,6 +27,12 @@ Client = IgeClass.extend
 
             ige.start (success) =>
                 if success
+                    # Setup AJAX to talk with google Url shortener
+                    $.ajaxSetup
+                        async: false
+                        contentType: 'application/json'
+                        processData: false
+                        
                     ige.viewportDepth true
                     
                     do @setupScene

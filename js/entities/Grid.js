@@ -4,18 +4,18 @@ var Grid;
 Grid = IgeEntity.extend({
   classId: 'Grid',
   init: function(_gridSize, _tileSize) {
-    var column, i, j, newTile, _i, _results;
+    var column, i, j, newTile, _i, _ref, _results;
     this._gridSize = _gridSize;
     this._tileSize = _tileSize;
     IgeEntity.prototype.init.call(this);
     this._grid = [];
     _results = [];
-    for (i = _i = 1; _i <= 15; i = ++_i) {
+    for (i = _i = 1, _ref = this._gridSize; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
       column = [];
       _results.push((function() {
-        var _j, _results1;
+        var _j, _ref1, _results1;
         _results1 = [];
-        for (j = _j = 1; _j <= 15; j = ++_j) {
+        for (j = _j = 1, _ref1 = this._gridSize; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 1 <= _ref1 ? ++_j : --_j) {
           newTile = new Tile(this._tileSize).id("" + i + "x" + j).translateTo(i * this._tileSize, j * this._tileSize, 0).mount(this);
           _results1.push(column.push(newTile));
         }

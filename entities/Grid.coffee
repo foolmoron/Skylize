@@ -5,9 +5,9 @@ Grid = IgeEntity.extend
         IgeEntity::init.call @
 
         @_grid = []
-        for i in [1..15]
+        for i in [1..@_gridSize]
             column = []
-            for j in [1..15]
+            for j in [1..@_gridSize]
                 newTile = new Tile(@_tileSize)
                     .id("#{i}x#{j}")
                     .translateTo i * @_tileSize, j * @_tileSize, 0

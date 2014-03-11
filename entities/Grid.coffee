@@ -109,20 +109,20 @@ Grid = IgeEntity.extend
                 currentColor = Light.COLOR.RED if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l', 'f', 'b', 'h', 'v']
                     tile._lights[light].color(currentColor)
-                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(currentColor)
-                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(currentColor)
+                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
+                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 1
                 currentColor = Light.COLOR.BLUE if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l', 'f', 'b']
                     tile._lights[light].color(currentColor)
-                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(currentColor)
-                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(currentColor)
+                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
+                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 2
                 currentColor = Light.COLOR.WHITE if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l']
                     tile._lights[light].color(currentColor)
-                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l'].color(currentColor)
-                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t'].color(currentColor)
+                @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
+                @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 3
                 currentColor = Light.COLOR.RED if currentColor == 'all'
                 for light of tile._lights when light in ['f', 'b']

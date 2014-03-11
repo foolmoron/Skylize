@@ -13,7 +13,11 @@ Light = IgeEntity.extend({
       return this._color;
     }
     this._color = color;
-    this.texture(SL.tex[this._type + this._color]);
+    if (color === Light.COLOR.NONE) {
+      this.texture(null);
+    } else {
+      this.texture(SL.tex[this._type + this._color]);
+    }
     return this;
   }
 });
@@ -25,6 +29,7 @@ Light.TYPE = {
 };
 
 Light.COLOR = {
+  NONE: 'none',
   WHITE: 'w',
   RED: 'r',
   GREEN: 'g',

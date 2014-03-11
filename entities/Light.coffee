@@ -11,10 +11,13 @@ Light = IgeEntity.extend
             return @_color
 
         @_color = color
-        @texture(SL.tex[@_type + @_color])
+        if color == Light.COLOR.NONE
+            @texture(null)
+        else
+            @texture(SL.tex[@_type + @_color])
         return @
 
 Light.TYPE = { SIDE: 'side', DIAG: 'diag', MID: 'mid'}
-Light.COLOR = { WHITE: 'w', RED: 'r', GREEN: 'g', BLUE: 'b', PINK: 'p', YELLOW: 'y'}
+Light.COLOR = { NONE: 'none', WHITE: 'w', RED: 'r', GREEN: 'g', BLUE: 'b', PINK: 'p', YELLOW: 'y'}
 
 module.exports = Light if module?.exports?

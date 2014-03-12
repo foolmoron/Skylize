@@ -88,8 +88,8 @@ Grid = IgeEntity.extend({
       return function(evt) {
         var point;
         point = {
-          x: evt.x + _this.MOUSE_POSITION_HACK_X,
-          y: evt.y + _this.MOUSE_POSITION_HACK_Y
+          x: evt.igePageX + _this.MOUSE_POSITION_HACK_X,
+          y: evt.igePageY + _this.MOUSE_POSITION_HACK_Y
         };
         if (point.x >= 0 && point.y >= 0) {
           return _this.handleDown(evt, point);
@@ -99,8 +99,8 @@ Grid = IgeEntity.extend({
       return function(evt) {
         var point;
         point = {
-          x: evt.x + _this.MOUSE_POSITION_HACK_X,
-          y: evt.y + _this.MOUSE_POSITION_HACK_Y
+          x: evt.igePageX + _this.MOUSE_POSITION_HACK_X,
+          y: evt.igePageY + _this.MOUSE_POSITION_HACK_Y
         };
         if (point.x >= 0 && point.y >= 0) {
           return _this.handleMove(evt, point);
@@ -110,8 +110,8 @@ Grid = IgeEntity.extend({
       return function(evt) {
         var point;
         point = {
-          x: evt.x + _this.MOUSE_POSITION_HACK_X,
-          y: evt.y + _this.MOUSE_POSITION_HACK_Y
+          x: evt.igePageX + _this.MOUSE_POSITION_HACK_X,
+          y: evt.igePageY + _this.MOUSE_POSITION_HACK_Y
         };
         if (point.x >= 0 && point.y >= 0) {
           return _this.handleUp(evt, point);

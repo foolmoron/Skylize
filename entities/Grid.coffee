@@ -72,18 +72,18 @@ Grid = IgeEntity.extend
             .translateTo (SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, (SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0
             .mouseDown (evt) =>
                 point =
-                    x: evt.x + @MOUSE_POSITION_HACK_X
-                    y: evt.y + @MOUSE_POSITION_HACK_Y
+                    x: evt.igePageX + @MOUSE_POSITION_HACK_X
+                    y: evt.igePageY + @MOUSE_POSITION_HACK_Y
                 @handleDown(evt, point) if point.x >= 0 && point.y >= 0
             .mouseMove (evt) =>
                 point =
-                    x: evt.x + @MOUSE_POSITION_HACK_X
-                    y: evt.y + @MOUSE_POSITION_HACK_Y
+                    x: evt.igePageX + @MOUSE_POSITION_HACK_X
+                    y: evt.igePageY + @MOUSE_POSITION_HACK_Y
                 @handleMove(evt, point) if point.x >= 0 && point.y >= 0
             .mouseUp (evt) =>
                 point =
-                    x: evt.x + @MOUSE_POSITION_HACK_X
-                    y: evt.y + @MOUSE_POSITION_HACK_Y
+                    x: evt.igePageX + @MOUSE_POSITION_HACK_X
+                    y: evt.igePageY + @MOUSE_POSITION_HACK_Y
                 @handleUp(evt, point) if point.x >= 0 && point.y >= 0
             .mount @
 

@@ -74,7 +74,7 @@ Client = IgeClass.extend({
   },
   setupEntities: function() {
     this.grid = new Grid(SL.GRID_SIZE, SL.TILE_SIZE).id('grid').translateTo(-(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, -(SL.GRID_SIZE / 2 - 0.5) * SL.TILE_SIZE, 0).mount(this.gameScene);
-    return this.saveShareButton = new IgeUiEntity().texture(SL.tex['saveshare']).dimensionsFromCell().top(5).right(10).mouseDown((function(_this) {
+    this.saveShareButton = new IgeUiEntity().texture(SL.tex['saveshare']).dimensionsFromCell().top(5).right(10).mouseDown((function(_this) {
       return function() {
         var longString, shortString;
         longString = _this.grid.serialize();
@@ -83,6 +83,13 @@ Client = IgeClass.extend({
           return prompt("Use this URL to share you art with others, or bookmark it to come back later:", "http://foolmoron.itch.io/skylize?s=" + shortString);
         } else {
           return prompt("Something went wrong with the URL shortener, so you can't have a URL to share.  But you can use this monstrous URL to come back to your art later, if you want:", "http://foolmoron.itch.io/skylize?l=" + longString);
+        }
+      };
+    })(this)).mount(this.fgScene);
+    return this.clearButton = new IgeUiEntity().texture(SL.tex['clear']).dimensionsFromCell().top(5).left(10).mouseDown((function(_this) {
+      return function() {
+        if (confirm("Really clear the screen?")) {
+          return _this.grid.clear();
         }
       };
     })(this)).mount(this.fgScene);

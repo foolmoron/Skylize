@@ -28,7 +28,8 @@ Client::load = ->
         'pickerb.png',
         'pickerp.png',
         'pickery.png',
-        'saveshare.png'
+        'saveshare.png',
+        'clear.png'
     ]
     CELLSHEET_DESCRIPTIONS = [
     ]

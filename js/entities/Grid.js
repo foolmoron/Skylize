@@ -5,7 +5,7 @@ Grid = IgeEntity.extend({
   classId: 'Grid',
   MOUSE_POSITION_HACK_X: -15,
   MOUSE_POSITION_HACK_Y: -75,
-  PICKER_OFFSETX: 100,
+  PICKER_OFFSETX: 125,
   PICKER_OFFSETY: -65,
   PICKER_GAPX: 60,
   PICKER_SIZE: 50,
@@ -168,7 +168,7 @@ Grid = IgeEntity.extend({
         return (_ref4 = this._grid[tilePos.x]) != null ? (_ref5 = _ref4[tilePos.y + 1]) != null ? (_ref6 = _ref5._lights['t']) != null ? _ref6.color(currentColor) : void 0 : void 0 : void 0;
       case 1:
         if (currentColor === 'all') {
-          currentColor = Light.COLOR.BLUE;
+          currentColor = Light.COLOR.PINK;
         }
         for (light in tile._lights) {
           if (light === 't' || light === 'l' || light === 'f' || light === 'b') {
@@ -185,7 +185,7 @@ Grid = IgeEntity.extend({
         return (_ref10 = this._grid[tilePos.x]) != null ? (_ref11 = _ref10[tilePos.y + 1]) != null ? (_ref12 = _ref11._lights['t']) != null ? _ref12.color(currentColor) : void 0 : void 0 : void 0;
       case 2:
         if (currentColor === 'all') {
-          currentColor = Light.COLOR.WHITE;
+          currentColor = Light.COLOR.YELLOW;
         }
         for (light in tile._lights) {
           if (light === 't' || light === 'l') {
@@ -202,7 +202,7 @@ Grid = IgeEntity.extend({
         return (_ref16 = this._grid[tilePos.x]) != null ? (_ref17 = _ref16[tilePos.y + 1]) != null ? (_ref18 = _ref17._lights['t']) != null ? _ref18.color(currentColor) : void 0 : void 0 : void 0;
       case 3:
         if (currentColor === 'all') {
-          currentColor = Light.COLOR.PINK;
+          currentColor = Light.COLOR.BLUE;
         }
         _results = [];
         for (light in tile._lights) {
@@ -226,7 +226,7 @@ Grid = IgeEntity.extend({
         break;
       case 5:
         if (currentColor === 'all') {
-          currentColor = Light.COLOR.YELLOW;
+          currentColor = Light.COLOR.WHITE;
         }
         _results2 = [];
         for (light in tile._lights) {
@@ -240,6 +240,29 @@ Grid = IgeEntity.extend({
   handleUp: function(evt, point) {
     this._painting = false;
     return this._lastTouch = null;
+  },
+  clear: function() {
+    var i, j, light, tile, _i, _ref, _results;
+    _results = [];
+    for (i = _i = 0, _ref = this._gridSize; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      _results.push((function() {
+        var _j, _ref1, _results1;
+        _results1 = [];
+        for (j = _j = 0, _ref1 = this._gridSize; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+          tile = this._grid[i][j];
+          _results1.push((function() {
+            var _results2;
+            _results2 = [];
+            for (light in tile._lights) {
+              _results2.push(tile._lights[light].color(Light.COLOR.NONE));
+            }
+            return _results2;
+          })());
+        }
+        return _results1;
+      }).call(this));
+    }
+    return _results;
   },
   serialize: function() {
     var bareGrid, i, j, light, row, tile, tileDescriptor, _i, _j, _ref, _ref1;

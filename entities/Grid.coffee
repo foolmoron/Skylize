@@ -4,7 +4,7 @@ Grid = IgeEntity.extend
     MOUSE_POSITION_HACK_X: -15
     MOUSE_POSITION_HACK_Y: -75
 
-    PICKER_OFFSETX: 100
+    PICKER_OFFSETX: 125
     PICKER_OFFSETY: -65
     PICKER_GAPX: 60
     PICKER_SIZE: 50
@@ -112,19 +112,19 @@ Grid = IgeEntity.extend
                 @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
                 @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 1
-                currentColor = Light.COLOR.BLUE if currentColor == 'all'
+                currentColor = Light.COLOR.PINK if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l', 'f', 'b']
                     tile._lights[light].color(currentColor)
                 @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
                 @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 2
-                currentColor = Light.COLOR.WHITE if currentColor == 'all'
+                currentColor = Light.COLOR.YELLOW if currentColor == 'all'
                 for light of tile._lights when light in ['t', 'l']
                     tile._lights[light].color(currentColor)
                 @_grid[tilePos.x + 1]?[tilePos.y]?._lights['l']?.color(currentColor)
                 @_grid[tilePos.x]?[tilePos.y + 1]?._lights['t']?.color(currentColor)
             when 3
-                currentColor = Light.COLOR.PINK if currentColor == 'all'
+                currentColor = Light.COLOR.BLUE if currentColor == 'all'
                 for light of tile._lights when light in ['f', 'b']
                     tile._lights[light].color(currentColor)
             when 4
@@ -132,13 +132,20 @@ Grid = IgeEntity.extend
                 for light of tile._lights when light in ['h', 'v']
                     tile._lights[light].color(currentColor)
             when 5
-                currentColor = Light.COLOR.YELLOW if currentColor == 'all'
+                currentColor = Light.COLOR.WHITE if currentColor == 'all'
                 for light of tile._lights when light in ['h']
                     tile._lights[light].color(currentColor)
 
     handleUp: (evt, point) ->
         @_painting = false
         @_lastTouch = null
+
+    clear: ->
+        for i in [0..@_gridSize]
+            for j in [0..@_gridSize]
+                tile = @_grid[i][j]
+                for light of tile._lights
+                    tile._lights[light].color Light.COLOR.NONE
 
     serialize: ->
         bareGrid = []

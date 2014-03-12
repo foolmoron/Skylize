@@ -103,6 +103,16 @@ Client = IgeClass.extend
                     prompt "Something went wrong with the URL shortener, so you can't have a URL to share.  But you can use this monstrous URL to come back to your art later, if you want:", "http://foolmoron.itch.io/skylize?l=#{longString}"
             .mount(@fgScene)
 
+        @clearButton = new IgeUiEntity()
+            .texture SL.tex['clear']
+            .dimensionsFromCell()
+            .top 5
+            .left 10
+            .mouseDown =>
+                if confirm "Really clear the screen?"
+                    @grid.clear()
+            .mount(@fgScene)
+
     convertToLongString: (shortString) ->
         longUrl = null
         $.get "https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY + "&shortUrl=http://goo.gl/" + shortString, (data) ->

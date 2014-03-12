@@ -27,7 +27,7 @@ Client = IgeClass.extend({
       return function() {
         ige.createFrontBuffer(true);
         return ige.start(function(success) {
-          var longString, urlParameter;
+          var longString, urlParameter, _ref1;
           if (success) {
             $.ajaxSetup({
               async: false,
@@ -37,8 +37,13 @@ Client = IgeClass.extend({
             ige.viewportDepth(true);
             _this.setupScene();
             _this.setupEntities();
-            if (location.search.length > 0) {
-              urlParameter = location.search.split("?")[1];
+            if (((_ref1 = document.referrer.split("?")[1]) != null ? _ref1.length : void 0) > 0) {
+              urlParameter = document.referrer.split("?")[1];
+            }
+            if (!urlParameter) {
+              if (location.search.length > 0) {
+                urlParameter = location.search.split("?")[1];
+              }
             }
             if (urlParameter) {
               if (urlParameter[0] === 'l') {

@@ -38,7 +38,9 @@ Client = IgeClass.extend
                     do @setupScene
                     do @setupEntities
 
-                    urlParameter = location.search.split("?")[1] if location.search.length > 0
+                    urlParameter = document.referrer.split("?")[1] if document.referrer.split("?")[1]?.length > 0
+                    if !urlParameter
+                        urlParameter = location.search.split("?")[1] if location.search.length > 0
                     if urlParameter
                         longString = urlParameter.substring 2 if urlParameter[0] == 'l'
                         longString = @convertToLongString urlParameter.substring 2 if urlParameter[0] == 's'

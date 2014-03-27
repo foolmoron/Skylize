@@ -112,7 +112,7 @@ Client = IgeClass.extend({
   convertToShortString: function(longString) {
     var shortUrl;
     shortUrl = null;
-    $.post("https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY, '{"longUrl": "foolmoron.io?q=' + longString + '"}', function(data) {
+    $.post("https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY, '{"longUrl": "http://foolmoron.itch.io/skylize?l=' + longString + '"}', function(data) {
       return shortUrl = data.id;
     });
     if (shortUrl != null) {

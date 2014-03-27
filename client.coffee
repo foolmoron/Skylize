@@ -123,7 +123,7 @@ Client = IgeClass.extend
 
     convertToShortString: (longString) ->
         shortUrl = null
-        $.post "https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY, '{"longUrl": "foolmoron.io?q=' + longString + '"}', (data) ->
+        $.post "https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY, '{"longUrl": "http://foolmoron.itch.io/skylize?l=' + longString + '"}', (data) ->
             shortUrl = data.id # synchronously obtain shortened URL from goo.gl
         return shortUrl.split('/')[shortUrl.split('/').length - 1] if shortUrl?
 

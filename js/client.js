@@ -105,8 +105,8 @@ Client = IgeClass.extend({
     $.get("https://www.googleapis.com/urlshortener/v1/url?key=" + SL.GOOGLE_API_KEY + "&shortUrl=http://goo.gl/" + shortString, function(data) {
       return longUrl = data.longUrl;
     });
-    if ((longUrl != null) && longUrl.split('?q=').length > 0) {
-      return longUrl.split('?q=')[1];
+    if ((longUrl != null) && longUrl.split('?l=').length > 0) {
+      return longUrl.split('?l=')[1];
     }
   },
   convertToShortString: function(longString) {
